@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Checklist Viviendas">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Checklist viviendas</title>
+<style>
+:root{--bg:#07101e;--card:#101a2b;--line:#273750;--txt:#f7f9fc;--muted:#a8b4c8;--ok:#38d996;--warn:#ffcc66;--bad:#ff6b73;--accent:#d6ff63;--accentTxt:#172100}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#060c16,#0b1423 55%,#08111f);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;line-height:1.35}button,input,textarea{font:inherit}
+.app{max-width:760px;margin:auto;padding:calc(12px + env(safe-area-inset-top)) 10px calc(96px + env(safe-area-inset-bottom))}.hero{background:linear-gradient(145deg,#17253c,#0f192a);border:1px solid var(--line);border-radius:24px;padding:17px;box-shadow:0 18px 50px rgba(0,0,0,.22)}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--accent)}h1{font-size:25px;line-height:1.1;margin:6px 0 7px}.visitCode{display:inline-block;color:#d9e4f4;background:#0a1423;border:1px solid var(--line);padding:6px 9px;border-radius:999px;font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace}.privacy{margin-top:11px;color:var(--muted);font-size:12px}.progressRow{display:flex;align-items:center;gap:13px;margin-top:14px}.ring{--p:0;width:70px;height:70px;min-width:70px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),#2c3a53 0);display:grid;place-items:center;position:relative}.ring:before{content:"";width:56px;height:56px;background:#101a2b;border-radius:50%;position:absolute}.ring span{position:relative;font-weight:900}.progressText strong{display:block;font-size:15px}.progressText small{color:var(--muted)}
+.stickyNav{position:sticky;top:0;z-index:10;margin:10px -10px 0;padding:8px 10px;background:rgba(7,16,30,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(39,55,80,.7);overflow:auto;white-space:nowrap}.stickyNav a{display:inline-block;color:var(--txt);text-decoration:none;padding:8px 10px;border:1px solid var(--line);background:#101a2b;border-radius:999px;font-size:12px;margin-right:5px}
+section{margin-top:12px;border:1px solid var(--line);background:rgba(16,26,43,.96);border-radius:19px;overflow:hidden}.secHead{padding:13px 14px;background:#111e31;border-bottom:1px solid var(--line)}.secHead h2{font-size:17px;margin:0}.secHead small{color:var(--muted)}.item{padding:13px;border-bottom:1px solid rgba(39,55,80,.68)}.item:last-child{border-bottom:0}.label{font-weight:800;font-size:14px}.critical .label:before{content:"⚠ ";color:var(--warn)}.hint{font-size:12px;color:var(--muted);margin:3px 0 10px}.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.seg button{border:1px solid #364762;background:#0c1627;color:#d8e0ec;border-radius:11px;padding:10px 2px;font-weight:800;font-size:11px}.seg button[data-v="ok"].active{background:rgba(56,217,150,.15);border-color:var(--ok);color:#91f0c6}.seg button[data-v="warn"].active{background:rgba(255,204,102,.14);border-color:var(--warn);color:#ffe09c}.seg button[data-v="bad"].active{background:rgba(255,107,115,.15);border-color:var(--bad);color:#ffadb2}.seg button[data-v="na"].active{background:#283349;border-color:#8795aa;color:#e9eef5}.noteToggle{margin-top:8px;border:0;background:none;color:#c9d5e6;padding:3px 0;font-size:12px}.note{display:none;margin-top:7px}.note.show{display:block}.note textarea,.general textarea{width:100%;min-height:72px;resize:vertical;background:#091322;color:var(--txt);border:1px solid #33445e;border-radius:11px;padding:10px}.general{padding:13px}.general label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}.summary{white-space:pre-wrap;background:#081221;border:1px solid var(--line);border-radius:13px;padding:12px;font-size:13px;min-height:130px}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;gap:7px;overflow:auto;padding:9px 10px calc(9px + env(safe-area-inset-bottom));background:rgba(6,12,22,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line)}.bottom button{white-space:nowrap;border:0;border-radius:12px;padding:11px 13px;font-weight:900;background:#21324c;color:#fff}.bottom .primary{background:var(--accent);color:var(--accentTxt)}.bottom .danger{background:#3a1e27;color:#ffd9dc}.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#e9f1ff;color:#142033;padding:9px 12px;border-radius:999px;font-weight:800;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:80}.toast.show{opacity:1}.footer{text-align:center;color:var(--muted);font-size:11px;padding:16px 4px}
+#printReport{display:none}
+@media(max-width:500px){.hero{padding:15px}.seg button{font-size:10.5px;padding:10px 1px}}
+@media print{
+  @page{size:A4;margin:11mm}
+  body{background:#fff!important;color:#111!important;font-family:Arial,sans-serif!important}
+  .app,.bottom,.toast{display:none!important}
+  #printReport{display:block!important;color:#111!important;background:#fff!important}
+  #printReport h1{font-size:21pt;margin:0 0 4mm}#printReport h2{font-size:14pt;margin:6mm 0 2mm;border-bottom:1px solid #bbb;padding-bottom:1.5mm}
+  .pr-meta{display:flex;gap:12mm;font-size:9pt;color:#444;margin-bottom:4mm}.pr-score{padding:3mm;border:1px solid #bbb;border-radius:3mm;margin-bottom:5mm;font-size:10pt}
+  .pr-table{width:100%;border-collapse:collapse;font-size:8.5pt}.pr-table th,.pr-table td{border:1px solid #ccc;padding:2mm;vertical-align:top}.pr-table th{background:#eee;text-align:left}.pr-status{white-space:nowrap;font-weight:bold}.pr-note{color:#333}.pr-section{break-inside:avoid}.pr-summary{white-space:pre-wrap;border:1px solid #bbb;padding:3mm;border-radius:2mm;font-size:9pt}.pr-foot{margin-top:6mm;color:#666;font-size:8pt}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hero">
+    <div class="eyebrow">Checklist de visita</div>
+    <h1>Inspección de vivienda</h1>
+    <div class="visitCode" id="visitCode"></div>
+    <div class="privacy">Sin dirección, precio ni datos identificativos de la vivienda. Las respuestas se guardan solo en este dispositivo.</div>
+    <div class="progressRow"><div class="ring" id="ring"><span id="pct">0%</span></div><div class="progressText"><strong id="verdict">Empieza la visita</strong><small id="count">0 puntos revisados</small></div></div>
+  </div>
+
+  <div class="stickyNav"><a href="#entorno">Entorno</a><a href="#edificio">Edificio</a><a href="#vivienda">Vivienda</a><a href="#instalaciones">Instalaciones</a><a href="#garaje">Garaje</a><a href="#docs">Preguntas</a><a href="#resumen">Resumen</a></div>
+  <div id="checklist"></div>
+
+  <section id="observaciones"><div class="secHead"><h2>Observaciones generales</h2><small>Solo queda guardado en tu dispositivo</small></div><div class="general"><label>Impresión, puntos fuertes, dudas o cosas que quieras que analice después</label><textarea id="generalNotes" placeholder="Escribe aquí tus notas generales…"></textarea></div></section>
+
+  <section id="resumen"><div class="secHead"><h2>Resumen automático</h2><small>Este mismo contenido se incluirá en el informe PDF</small></div><div class="general"><div class="summary" id="summary"></div></div></section>
+
+  <div class="footer">La web no contiene datos concretos de ninguna vivienda ni envía tus respuestas a servidores.</div>
+</div>
+
+<div class="bottom"><button class="primary" id="pdfBtn">Informe PDF</button><button id="shareBtn">Compartir resumen</button><button id="copyBtn">Copiar</button><button class="danger" id="newBtn">Nueva visita</button></div>
+<div class="toast" id="toast">Guardado</div>
+<div id="printReport"></div>
+
+<script>
+const STORAGE='checklist-viviendas-generic-v2';
+const INITIAL_CODE='V-7C2F-26';
+const sections=[
+ {id:'entorno',title:'1 · Entorno y ubicación',sub:'Lo que no se puede reformar',items:[
+  ['calle','Ruido y ambiente de la calle','Visítala con las ventanas abiertas y cerradas. Tráfico, bares, vecinos, trenes, colegios, industria.',1],
+  ['servicios','Servicios y accesos','Comercios, transporte, salida en coche, iluminación nocturna y sensación del entorno.',0],
+  ['aparcamiento','Aparcamiento exterior','Disponibilidad real para visitas o segundo vehículo, si es relevante.',0],
+  ['riesgosZona','Riesgos visibles de la zona','Inundación, taludes, cauces, carreteras, líneas eléctricas, industrias u otras molestias.',1]
+ ]},
+ {id:'edificio',title:'2 · Edificio y zonas comunes',sub:'Estado general y gastos futuros',items:[
+  ['portal','Portal, escalera y zonas comunes','Limpieza, conservación, iluminación, olores, buzones, barandillas y accesibilidad.',0],
+  ['ascensor','Ascensor / accesibilidad','Si existe o está previsto: estado, cota de llegada, barreras, mantenimiento y obras pendientes.',1],
+  ['fachada','Fachada, balcones y petos','Grietas, desprendimientos, oxidaciones, juntas y reparaciones recientes.',1],
+  ['cubierta','Cubierta / azotea','Especialmente si es última planta: goteras, impermeabilización, reparaciones y fecha de última actuación.',1],
+  ['estructuraComun','Grietas o deformaciones en zonas comunes','Grietas diagonales, fisuras repetidas, desplomes o deformaciones llamativas.',1],
+  ['bajantes','Bajantes y saneamiento común','Manchas, olores, fugas, bajantes antiguas y trabajos previstos.',0]
+ ]},
+ {id:'vivienda',title:'3 · Interior de la vivienda',sub:'Distribución, luz y patologías',items:[
+  ['distribucion','Distribución y aprovechamiento','Pasillos, tamaños reales, circulación y posibilidad de amueblar sin forzar.',0],
+  ['luz','Luz natural y orientación','Apaga luces y comprueba estancias principales en condiciones reales.',0],
+  ['humedad','Humedades, condensación o moho','Esquinas, techos, detrás de muebles, ventanas, baños, terrazas y perímetros.',1],
+  ['grietas','Grietas y fisuras interiores','Especialmente diagonales desde huecos, encuentros techo-pared y cambios de material.',1],
+  ['ventanas','Ventanas y aislamiento','Vidrios, cierres, persianas, entrada de aire, condensación y ruido.',0],
+  ['suelos','Suelos y desniveles','Tarima levantada, baldosas huecas, juntas, pendientes o desniveles extraños.',0],
+  ['puertas','Puertas, armarios y carpintería','Rozamientos, cierres, humedad en marcos y capacidad de almacenamiento.',0],
+  ['terraza','Terrazas / balcones, si existen','Pendiente, sumideros, impermeabilización, petos, fisuras y filtraciones.',1],
+  ['dormitorios','Dormitorios','Tamaño útil, armarios, enchufes, ruido y posibilidad real de mobiliario.',0]
+ ]},
+ {id:'instalaciones',title:'4 · Instalaciones',sub:'Probar, no solo preguntar',items:[
+  ['cuadro','Cuadro eléctrico','Fotografía el cuadro. Diferenciales, magnetotérmicos, etiquetado y antigüedad aparente.',1],
+  ['electricidad','Enchufes e instalación eléctrica','Cantidad, estado, tomas de tierra y si se ha renovado la instalación.',0],
+  ['presion','Presión de agua','Abre dos grifos a la vez y acciona una cisterna.',1],
+  ['desagues','Desagües','Fregadero, lavabo y ducha/bañera: lentitud, olores o gorgoteos.',0],
+  ['fontaneria','Fontanería visible','Fugas, llaves de corte, corrosión, latiguillos y material de tuberías si se conoce.',0],
+  ['calefaccion','Calefacción y ACS','Sistema, combustible, antigüedad, revisiones, consumo y funcionamiento.',1],
+  ['clima','Climatización','Aire acondicionado o bomba de calor: funcionamiento, ruido, antigüedad y desagües.',0],
+  ['cocina','Cocina','Muebles, encimera, ventilación, electrodomésticos, fontanería y enchufes.',0],
+  ['bano','Baños','Ventilación, juntas, silicona, cisterna, grifería, presión y humedades.',0]
+ ]},
+ {id:'garaje',title:'5 · Garaje, trastero y anexos',sub:'Marca N/A cuando no exista',items:[
+  ['plaza','Plaza de garaje','Probar maniobra real: rampa, giro, pilares, ancho, largo y apertura de puertas.',1],
+  ['rampa','Acceso y rampa de garaje','Pendiente, anchura, puerta, charcos, visibilidad y facilidad de entrada/salida.',0],
+  ['carga','Posibilidad de punto de recarga','Contador, canalización, recorrido hasta la plaza y precedentes en la comunidad.',0],
+  ['humedadGaraje','Humedad en garaje o trastero','Zócalos, techos, olor, salitre, sumideros y bombas de achique.',1],
+  ['trastero','Trastero / anexos','Superficie, altura, ventilación, acceso, seguridad y correspondencia con documentación.',0]
+ ]},
+ {id:'docs',title:'6 · Preguntas y documentación',sub:'Para evitar sorpresas después de la visita',items:[
+  ['comunidad','Cuota de comunidad','Importe mensual, qué incluye y evolución reciente.',0],
+  ['derramas','Derramas y obras aprobadas o previstas','Fachada, cubierta, ascensor, bajantes, garaje, portal, accesibilidad u otras.',1],
+  ['ibi','IBI y otros gastos fijos','Importe anual de IBI y cualquier tasa relevante.',0],
+  ['siniestros','Goteras, humedades o siniestros anteriores','Qué ocurrió, cuándo, reparación realizada y si hubo parte al seguro.',1],
+  ['reformas','Reformas realizadas','Qué se reformó, fecha, alcance, profesionales y facturas si existen.',0],
+  ['motivo','Motivo de venta y plazos','Útil para valorar urgencia, disponibilidad y margen de negociación.',0],
+  ['registro','Registro y Catastro','Superficies, anexos, reformas/ampliaciones y coincidencia entre realidad y documentación.',1],
+  ['notaSimple','Nota simple y cargas','Titularidad, hipotecas, embargos, afecciones y otras cargas.',1],
+  ['comunidadDeuda','Situación con la comunidad','Certificado de deuda cero y revisión de últimas actas.',1],
+  ['ite','ITE / IEE y estado del edificio','Si corresponde: resultado, deficiencias y actuaciones pendientes.',1],
+  ['energetico','Certificado energético','Calificación vigente y coherencia con instalaciones existentes.',0]
+ ]},
+ {id:'final',title:'7 · Valoración final',sub:'Hazla al salir, ya sin el vendedor delante',items:[
+  ['sensacion','Sensación general','¿Os imagináis viviendo aquí realmente?',0],
+  ['espacio','Espacio para los próximos años','¿Encaja con vuestra vida y posibles cambios futuros?',0],
+  ['reformasInmediatas','Necesidad de reforma inmediata','Valora coste, tiempo y molestias antes de entrar.',1],
+  ['reventa','Facilidad de reventa','Tipología, altura, ascensor, garaje, zona y amplitud de compradores potenciales.',0],
+  ['decision','Relación global calidad / riesgos','Valoración final después de haber visto todo lo anterior.',1]
+ ]}
+];
+function makeCode(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='V-';for(let i=0;i<4;i++)s+=a[Math.floor(Math.random()*a.length)];s+='-26';return s}
+function baseState(){return{code:INITIAL_CODE,answers:{},notes:{},general:'',created:new Date().toISOString()}}
+let state=load();
+function load(){try{const x=JSON.parse(localStorage.getItem(STORAGE));if(x&&x.code)return x}catch(e){}return baseState()}
+function save(silent=false){state.general=document.getElementById('generalNotes')?.value||state.general||'';localStorage.setItem(STORAGE,JSON.stringify(state));renderScore();if(!silent)toast('Guardado')}
+function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function statusText(v){return v==='ok'?'✅ Bien':v==='warn'?'⚠️ Revisar':v==='bad'?'❌ Mal':v==='na'?'— N/A':'Pendiente'}
+function render(){document.getElementById('visitCode').textContent='ID '+state.code;const host=document.getElementById('checklist');host.innerHTML='';sections.forEach(s=>{const sec=document.createElement('section');sec.id=s.id;sec.innerHTML=`<div class="secHead"><h2>${esc(s.title)}</h2><small>${esc(s.sub)}</small></div>`;s.items.forEach(([id,label,hint,critical])=>{const v=state.answers[id]||'';const n=state.notes[id]||'';const d=document.createElement('div');d.className='item '+(critical?'critical':'');d.innerHTML=`<div class="label">${esc(label)}</div><div class="hint">${esc(hint)}</div><div class="seg"><button data-id="${id}" data-v="ok" class="${v==='ok'?'active':''}">✅ Bien</button><button data-id="${id}" data-v="warn" class="${v==='warn'?'active':''}">⚠️ Revisar</button><button data-id="${id}" data-v="bad" class="${v==='bad'?'active':''}">❌ Mal</button><button data-id="${id}" data-v="na" class="${v==='na'?'active':''}">N/A</button></div><button class="noteToggle" data-note="${id}">${n?'📝 Editar nota':'＋ Añadir nota'}</button><div class="note ${n?'show':''}" id="note-${id}"><textarea data-text="${id}" placeholder="Notas…">${esc(n)}</textarea></div>`;sec.appendChild(d)});host.appendChild(sec)});document.getElementById('generalNotes').value=state.general||'';bind();renderScore()}
+function bind(){document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{const id=b.dataset.id,v=b.dataset.v;state.answers[id]=state.answers[id]===v?'':v;save(true);render()});document.querySelectorAll('.noteToggle').forEach(b=>b.onclick=()=>document.getElementById('note-'+b.dataset.note).classList.toggle('show'));document.querySelectorAll('textarea[data-text]').forEach(t=>t.oninput=()=>{state.notes[t.dataset.text]=t.value;localStorage.setItem(STORAGE,JSON.stringify(state));renderScore()});document.getElementById('generalNotes').oninput=()=>save(true)}
+function metrics(){const items=sections.flatMap(s=>s.items);let score=0,den=0,answered=0,na=0,warn=0,bad=0,criticalBad=0;items.forEach(([id,,,critical])=>{const v=state.answers[id];if(!v)return;if(v==='na'){na++;return}answered++;const w=critical?3:1;den+=3*w;if(v==='ok')score+=3*w;if(v==='warn'){score+=1.5*w;warn++}if(v==='bad'){bad++;if(critical)criticalBad++}});const pct=den?Math.round(score/den*100):0;const total=items.length;const reviewed=answered+na;return{pct,answered,na,warn,bad,criticalBad,total,reviewed}}
+function renderScore(){const m=metrics();document.getElementById('ring').style.setProperty('--p',m.pct);document.getElementById('pct').textContent=m.reviewed?m.pct+'%':'0%';let verdict='Empieza la visita';if(m.reviewed>=7){if(m.criticalBad)verdict='⛔ Hay un punto crítico en rojo';else if(m.pct>=85)verdict='🟢 Muy buena impresión';else if(m.pct>=70)verdict='🟢 Interesante';else if(m.pct>=55)verdict='🟡 Hay que revisar';else verdict='🔴 Demasiadas dudas'}document.getElementById('verdict').textContent=verdict;document.getElementById('count').textContent=`${m.reviewed}/${m.total} revisados · ${m.warn} amarillos · ${m.bad} rojos`;document.getElementById('summary').textContent=buildSummary(m)}
+function buildSummary(m){const bad=[],warn=[];sections.forEach(s=>s.items.forEach(([id,label])=>{const v=state.answers[id];if(v==='bad')bad.push(label);if(v==='warn')warn.push(label)}));let s=`INFORME DE VISITA ${state.code}\nPuntuación: ${m.reviewed?m.pct+'%':'pendiente'} · Revisado: ${m.reviewed}/${m.total}\n`;if(m.criticalBad)s+=`Puntos críticos en rojo: ${m.criticalBad}\n`;if(bad.length)s+=`\n🔴 MAL\n- ${bad.join('\n- ')}\n`;if(warn.length)s+=`\n⚠️ REVISAR\n- ${warn.join('\n- ')}\n`;if(state.general)s+=`\n📝 OBSERVACIONES\n${state.general}\n`;if(m.criticalBad)s+='\nCONCLUSIÓN: no reservar sin aclarar los puntos críticos.';else if(m.reviewed<10)s+='\nCONCLUSIÓN: faltan comprobaciones antes de valorar.';else if(m.pct>=85)s+='\nCONCLUSIÓN: candidata fuerte; pasar a documentación y negociación.';else if(m.pct>=70)s+='\nCONCLUSIÓN: interesante; aclarar los puntos amarillos antes de avanzar.';else s+='\nCONCLUSIÓN: no avanzar sin resolver problemas o mejorar claramente las condiciones.';return s}
+function buildPrintReport(){const m=metrics();let h=`<h1>Informe de visita</h1><div class="pr-meta"><div><b>ID:</b> ${esc(state.code)}</div><div><b>Fecha:</b> ${new Date().toLocaleString('es-ES')}</div></div><div class="pr-score"><b>Puntuación:</b> ${m.reviewed?m.pct+'%':'pendiente'} &nbsp; · &nbsp; <b>Revisados:</b> ${m.reviewed}/${m.total} &nbsp; · &nbsp; <b>Revisar:</b> ${m.warn} &nbsp; · &nbsp; <b>Mal:</b> ${m.bad} &nbsp; · &nbsp; <b>Críticos en rojo:</b> ${m.criticalBad}</div>`;sections.forEach(s=>{h+=`<div class="pr-section"><h2>${esc(s.title)}</h2><table class="pr-table"><thead><tr><th style="width:34%">Punto</th><th style="width:14%">Estado</th><th>Notas</th></tr></thead><tbody>`;s.items.forEach(([id,label])=>{h+=`<tr><td>${esc(label)}</td><td class="pr-status">${esc(statusText(state.answers[id]))}</td><td class="pr-note">${esc(state.notes[id]||'')}</td></tr>`});h+='</tbody></table></div>'});if(state.general)h+=`<h2>Observaciones generales</h2><div class="pr-summary">${esc(state.general)}</div>`;h+=`<h2>Resumen</h2><div class="pr-summary">${esc(buildSummary(m))}</div><div class="pr-foot">Informe generado localmente desde la checklist. No contiene dirección, precio ni datos identificativos de la vivienda.</div>`;document.getElementById('printReport').innerHTML=h}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>x.classList.remove('show'),1000)}
+document.getElementById('pdfBtn').onclick=()=>{buildPrintReport();setTimeout(()=>window.print(),100)};
+document.getElementById('shareBtn').onclick=async()=>{const text=document.getElementById('summary').textContent;if(navigator.share){try{await navigator.share({title:'Informe '+state.code,text})}catch(e){}}else{await navigator.clipboard.writeText(text);toast('Resumen copiado')}};
+document.getElementById('copyBtn').onclick=async()=>{await navigator.clipboard.writeText(document.getElementById('summary').textContent);toast('Resumen copiado')};
+document.getElementById('newBtn').onclick=()=>{if(confirm('¿Empezar una nueva visita? Se borrarán las respuestas actuales de este dispositivo.')){state={code:makeCode(),answers:{},notes:{},general:'',created:new Date().toISOString()};localStorage.setItem(STORAGE,JSON.stringify(state));render()}};
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+render();
+</script>
+</body>
+</html>
