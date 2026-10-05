@@ -1,0 +1,11 @@
+{
+  "name": "Checklist viviendas",
+  "short_name": "Viviendas",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07101e",
+  "theme_color": "#0b1220",
+  "lang": "es",
+  "description": "Checklist móvil genérica para visitas de viviendas"
+}
