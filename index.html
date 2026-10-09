@@ -39,7 +39,7 @@ section{margin-top:12px;border:1px solid var(--line);background:rgba(16,26,43,.9
     <div class="progressRow"><div class="ring" id="ring"><span id="pct">0%</span></div><div class="progressText"><strong id="verdict">Empieza la visita</strong><small id="count">0 puntos revisados</small></div></div>
   </div>
 
-  <div class="stickyNav"><a href="#entorno">Entorno</a><a href="#edificio">Edificio</a><a href="#vivienda">Vivienda</a><a href="#instalaciones">Instalaciones</a><a href="#garaje">Garaje</a><a href="#docs">Preguntas</a><a href="#resumen">Resumen</a></div>
+  <div class="stickyNav"><a href="#entorno">Entorno</a><a href="#urbanizacion">Urbanización</a><a href="#edificio">Edificio</a><a href="#vivienda">Vivienda</a><a href="#instalaciones">Instalaciones</a><a href="#garaje">Garaje</a><a href="#docs">Preguntas</a><a href="#resumen">Resumen</a></div>
   <div id="checklist"></div>
 
   <section id="observaciones"><div class="secHead"><h2>Observaciones generales</h2><small>Solo queda guardado en tu dispositivo</small></div><div class="general"><label>Impresión, puntos fuertes, dudas o cosas que quieras que analice después</label><textarea id="generalNotes" placeholder="Escribe aquí tus notas generales…"></textarea></div></section>
@@ -54,82 +54,85 @@ section{margin-top:12px;border:1px solid var(--line);background:rgba(16,26,43,.9
 <div id="printReport"></div>
 
 <script>
-const STORAGE='checklist-visita-v-k4m8-26';
-const INITIAL_CODE='V-K4M8-26';
+const STORAGE='checklist-visita-v-r7d3-26';
+const INITIAL_CODE='V-R7D3-26';
 const sections=[
- {id:'entorno',title:'1 · Entorno y ubicación',sub:'Lo que no se puede reformar',items:[
-  ['calle','Ruido y ambiente de la calle','Comprueba tráfico, vecinos, bares, colegios, industria y ruido con ventanas abiertas y cerradas.',1],
-  ['servicios','Servicios y accesos','Comercios, transporte, salida hacia vías principales, iluminación y recorridos habituales.',0],
-  ['aparcamiento','Aparcamiento exterior','Valora disponibilidad para visitas o segundo vehículo y facilidad de acceso al edificio.',0],
-  ['riesgosZona','Riesgos visibles de la zona','Puntos bajos, charcos, cauces, taludes, líneas eléctricas, industria u otras molestias.',1]
+ {id:'entorno',title:'1 · Entorno y ubicación',sub:'Especial atención a movilidad y servicios reales',items:[
+  ['ruido','Ruido y ambiente','Comprueba tráfico, vecinos, zonas infantiles, piscina, tren/AVE si se percibe y ruido con ventanas abiertas y cerradas.',1],
+  ['servicios','Servicios a pie','Comprueba supermercado, farmacia, colegio/guardería, restauración y qué necesitáis realmente coger en coche.',0],
+  ['movilidad','Movilidad diaria','Valora tiempos reales hacia Guadalajara/A-2 y estación Guadalajara-Yebes. Distingue AVE de Cercanías y piensa en vuestros trayectos diarios.',1],
+  ['aparcamientoExterior','Aparcamiento exterior','Disponibilidad para visitas/segundo coche y saturación en tardes/noches.',0],
+  ['entornoFuturo','Parcelas y desarrollo alrededor','Observa solares vacíos, promociones en obra y posibles cambios de vistas, tráfico o ruido.',0]
  ]},
- {id:'edificio',title:'2 · Edificio y zonas comunes',sub:'Especial atención a ascensor, cubierta y comunidad',items:[
-  ['portal','Portal, escalera y zonas comunes','Conservación, limpieza, olores, accesibilidad, iluminación y mantenimiento general.',0],
-  ['ascensor','Ascensor y desembarque','Comprueba que llega realmente a la planta de acceso de la vivienda y pregunta por averías/derrames/mantenimiento.',1],
-  ['fachada','Fachada, petos y terrazas exteriores','Fisuras, desprendimientos, juntas, manchas, sellados y mantenimiento reciente.',1],
-  ['cubierta','Cubierta sobre la planta superior','Al ser dúplex, confirma si la planta alta queda bajo cubierta. Pregunta por goteras, impermeabilización y reparaciones.',1],
-  ['estructuraComun','Grietas o deformaciones en zonas comunes','Grietas diagonales, fisuras repetidas, desniveles o deformaciones llamativas.',1],
-  ['bajantes','Bajantes y saneamiento común','Manchas, olores, fugas, bajantes visibles y trabajos previstos.',0]
+ {id:'urbanizacion',title:'2 · Urbanización y piscina',sub:'Aquí puede estar buena parte del coste futuro',items:[
+  ['piscina','Piscina y zonas comunes','Estado del vaso, gresite/juntas, depuradora visible, duchas, césped y mantenimiento. Pregunta por incidencias y reparaciones recientes.',1],
+  ['ocupacion','Uso y ocupación de la urbanización','Pregunta cuántas viviendas hay, ocupación habitual, alquileres y cómo se pone la piscina en verano.',0],
+  ['cuota68','Cuota de comunidad','Confirmar importe actual, qué incluye exactamente y si el garaje/trastero llevan cuota aparte.',1],
+  ['morosidad','Morosidad comunitaria','Pregunta si existen impagos relevantes y pide últimas actas antes de arras.',1],
+  ['derramasUrb','Derramas de urbanización','Ascensores, piscina, fachadas, cubiertas, garaje, bombas, jardines y cualquier actuación aprobada o prevista.',1],
+  ['porteria','Servicios comunes','Comprueba si hay conserjería/portero, horarios y si forma parte de la cuota.',0]
  ]},
- {id:'duplex',title:'3 · Dúplex y planta superior',sub:'Puntos particulares de esta vivienda',items:[
-  ['escaleraInt','Escalera interior','Ancho, pendiente, altura libre, barandilla, seguridad y comodidad diaria. Piensa también en niños/mudanzas.',1],
-  ['accesoDorm','Acceso a dormitorios solo por escalera','Valora la dependencia de la escalera aunque haya ascensor en el edificio y cómo afecta a largo plazo/reventa.',1],
-  ['calorArriba','Temperatura en planta superior','Comprueba calor acumulado, orientación, aislamiento y ventilación. Pregunta cómo se comporta en julio/agosto.',1],
-  ['climaDorm2','Climatización del segundo dormitorio','El anuncio solo menciona aire acondicionado en uno: confirma si hay preinstalación o posibilidad sencilla de añadirlo.',0],
-  ['terrazaDorm','Acceso de ambos dormitorios a terraza','Comprueba puertas, cierres, privacidad, seguridad, mosquiteras/persianas y uso real del espacio.',0],
-  ['terrazaEstanca','Impermeabilización y desagüe de terraza','Busca pendientes, sumideros, juntas abiertas, manchas interiores/exteriores y pregunta por filtraciones previas.',1],
-  ['terrazaLegal','Titularidad y superficie de la terraza','Pregunta si es privativa o elemento común de uso exclusivo y si su superficie aparece correctamente en documentación.',1],
-  ['superficies','Metros reales por planta','Pide superficie útil de cada planta y confirma qué parte de los m² anunciados corresponde a vivienda, terraza y comunes.',1],
-  ['banosReal','Baños reales','El anuncio resume 2 baños, pero la descripción habla de aseo abajo + baño completo arriba. Compruébalo físicamente.',0]
+ {id:'edificio',title:'3 · Edificio y zonas comunes',sub:'Edificio de mediados/finales de los 2000: revisar envejecimiento',items:[
+  ['portal','Portal, escaleras y rellanos','Conservación, olores, pintura, iluminación, accesibilidad y sensación general.',0],
+  ['ascensor','Ascensor','Prueba funcionamiento, nivelación, ruidos y pregunta por averías o modernizaciones previstas.',1],
+  ['fachada','Fachada y terrazas','Fisuras, juntas, sellados, manchas de humedad, petos y encuentros de terrazas.',1],
+  ['cubierta','Cubierta','Al ser planta alta, pregunta por goteras y últimas reparaciones/impermeabilizaciones.',1],
+  ['garajeComun','Garaje común','Olor, ventilación, sumideros, bombas, pilares, humedades y estado de puertas.',1],
+  ['estructuraComun','Grietas o deformaciones','Busca grietas diagonales, fisuras repetidas o deformaciones en zonas comunes.',1]
  ]},
- {id:'vivienda',title:'4 · Interior de la vivienda',sub:'Estado, distribución y patologías',items:[
-  ['distribucion','Distribución y aprovechamiento','Comprueba que los 2 dormitorios y zonas de estar resulten amplios de verdad y que la escalera no robe demasiado espacio.',0],
-  ['luz','Luz natural y orientación','Apaga luces y comprueba iluminación real en ambas plantas.',0],
-  ['humedad','Humedades, condensación o moho','Esquinas, techos de planta superior, encuentros de terraza, baños, ventanas y detrás de armarios.',1],
-  ['grietas','Grietas y fisuras interiores','Especialmente en huecos, encuentro escalera-forjado, techos y perímetro de terraza.',1],
-  ['ventanas','Ventanas y aislamiento','Cierres, doble vidrio, persianas, entrada de aire, condensación y ruido.',0],
-  ['suelos','Suelos y desniveles','Piezas sueltas, tarima levantada, encuentros de escalera y zonas cercanas a terraza.',0],
-  ['armarios','Armarios empotrados','Capacidad, humedad/olores interiores, puertas y aprovechamiento.',0]
+ {id:'vivienda',title:'4 · Vivienda real vs anuncio',sub:'MUY IMPORTANTE: el anuncio indica que las fotos son de vivienda tipo',items:[
+  ['unidadReal','Confirmar que visitáis la unidad exacta','Que os enseñen el piso concreto que se vende, no otra vivienda tipo. Anota planta, puerta y orientación.',1],
+  ['fotosTipo','Diferencias respecto a las fotos del anuncio','Compara acabados, cocina, baños, suelos, pintura, vistas, terraza y estado real con las fotos publicadas.',1],
+  ['superficies','Superficie útil real','El anuncio habla de 108 m² construidos. Pide m² útiles de vivienda y superficies separadas de terraza, garaje, trastero y comunes.',1],
+  ['distribucion','Distribución y sensación de tamaño','2 dormitorios y 2 baños: comprueba amplitud real, pasillos y si os sirve a 5–10 años.',0],
+  ['terraza','Terraza','Tamaño útil, orientación, privacidad, vistas, ruido, sol, pendiente, sumidero y estado de impermeabilización.',1],
+  ['luz','Luz natural y orientación','Apaga luces y comprueba salón, dormitorios y cocina. Anota orientación real.',0],
+  ['humedad','Humedades y condensaciones','Esquinas, tras armarios, encuentros de ventanas, terraza, techos y baños.',1],
+  ['grietas','Grietas y fisuras interiores','Especial atención a huecos, encuentros techo-pared y perímetro de terraza.',1],
+  ['ventanas','Ventanas y aislamiento','Cierres, vidrio, persianas, entrada de aire, ruido y condensación.',0],
+  ['suelos','Suelos laminados','Busca hinchazón, juntas abiertas, crujidos y daños por agua, especialmente junto a terraza/cocina.',1],
+  ['armarios','Armarios empotrados','Capacidad, humedad/olores, herrajes y aprovechamiento.',0],
+  ['banos','Dos baños completos','Confirmar que son realmente dos baños completos y probar ventilación, grifería y sanitarios. Revisar hidromasaje si existe.',0]
  ]},
- {id:'instalaciones',title:'5 · Instalaciones',sub:'Probar, no solo preguntar',items:[
-  ['cuadro','Cuadro eléctrico','Fotografía el cuadro. Diferenciales, magnetotérmicos, etiquetado y potencia contratada.',1],
-  ['electricidad','Enchufes e instalación eléctrica','Cantidad, estado y enchufes suficientes en dormitorios/planta superior.',0],
-  ['presion','Presión de agua','Abre dos grifos a la vez y acciona una cisterna.',1],
-  ['desagues','Desagües','Fregadero, lavabo, ducha/bañera y posibles desagües de terraza.',0],
-  ['fontaneria','Fontanería visible','Fugas, llaves de corte, corrosión, latiguillos y material de tuberías si se conoce.',0],
-  ['calefaccion','Calefacción y ACS','Pregunta sistema, combustible, antigüedad, revisiones y consumo real.',1],
-  ['clima','Aire acondicionado','Prueba unidades existentes, ruido, drenaje y antigüedad.',0],
-  ['cocina','Cocina','Estado de muebles, encimera, electrodomésticos, ventilación, agua y enchufes.',0],
-  ['bano','Baño y aseo','Ventilación, juntas, cisternas, grifería, presión, humedades y posibilidad de ducha si ahora hay bañera.',0]
+ {id:'instalaciones',title:'5 · Instalaciones y consumo',sub:'El certificado publicado marca consumos altos para una vivienda de 2008',items:[
+  ['cuadro','Cuadro eléctrico','Fotografía cuadro, protecciones, etiquetado y potencia contratada.',1],
+  ['electricidad','Enchufes e instalación eléctrica','Estado, cantidad, tomas de tierra y posibles modificaciones.',0],
+  ['presion','Presión de agua','Abre dos grifos a la vez y descarga una cisterna.',1],
+  ['desagues','Desagües','Fregadero, lavabos, ducha/bañera y tendedero; escucha gorgoteos y comprueba velocidad.',0],
+  ['calefaccion','Calefacción y ACS','Confirmar combustible/equipo, antigüedad, revisiones y consumo anual aproximado.',1],
+  ['facturas','Facturas de suministros','Pide ejemplo real de invierno y verano si es posible. Contrasta con el certificado energético.',1],
+  ['climatizacion','Aire acondicionado / refrigeración','El anuncio no lo deja claro: confirmar si existe, en qué estancias y estado.',0],
+  ['cocina','Cocina y electrodomésticos incluidos','Qué se queda exactamente y estado de vitro, horno, campana, lavadora/lavavajillas si aplica.',0],
+  ['tendedero','Tendedero','Ventilación, desagüe, humedad y espacio real para lavadora/caldera si están allí.',0]
  ]},
- {id:'garaje',title:'6 · Garaje, trastero y anexos',sub:'Muy importante por tamaño de coche y posible cargador',items:[
-  ['plaza','Plaza de garaje con vuestro coche','Si podéis, meted el coche. Mira largo, ancho, pilares, apertura de puertas y maniobra completa.',1],
-  ['rampa','Acceso y rampa','Pendiente, anchura, giros, badenes, puerta y posibilidad de rozar bajos.',1],
-  ['carga','Punto de recarga','Recorrido desde contador/cuarto eléctrico, canalizaciones, precedentes y facilidad para instalar cargador.',0],
-  ['humedadGaraje','Humedad en garaje','Paredes, techo, pilares, sumideros, olor, salitre y señales de entradas de agua.',1],
-  ['trastero','Trastero','Ubicación, superficie, humedad, ventilación, seguridad y que figure como anejo en Registro.',1]
+ {id:'garaje',title:'6 · Garaje y trastero',sub:'Probar con el coche si es posible',items:[
+  ['plaza','Plaza de garaje con vuestro coche','Mete el coche si podéis: largo, ancho, pilares, giro y apertura de puertas.',1],
+  ['rampa','Rampa y maniobra','Pendiente, giros, badenes, puerta y entrada/salida simultánea.',1],
+  ['carga','Instalación de cargador','Recorrido desde contador, canalizaciones existentes y antecedentes de otros vecinos con punto de carga.',0],
+  ['humedadGaraje','Humedad / entradas de agua','Paredes, techos, sumideros, bombas, salitre y marcas antiguas.',1],
+  ['trastero','Trastero','Superficie, ventilación, olor, humedad, seguridad y que figure como anejo documental.',1]
  ]},
- {id:'docs',title:'7 · Preguntas y documentación',sub:'No entregar señal sin aclarar esto',items:[
-  ['comunidad','Cuota de comunidad','Importe mensual y qué incluye: ascensor, garaje, seguros, mantenimiento, etc.',0],
-  ['derramas','Derramas y obras previstas','Pregunta por cubierta, terrazas, ascensor, fachada, garaje y portal; revisar últimas actas.',1],
-  ['ibi','IBI y gastos anuales','IBI, tasa de residuos si aplica, seguro y consumos orientativos.',0],
-  ['siniestros','Filtraciones o siniestros anteriores','Especialmente terraza/cubierta de la planta superior y garaje.',1],
-  ['reformas','Reformas realizadas','Qué se ha cambiado, cuándo y si hay facturas/garantías.',0],
-  ['motivo','Motivo de venta y tiempo anunciado','Ayuda a estimar urgencia y margen real de negociación.',0],
-  ['registro','Registro y Catastro','Confirmar metros, dos plantas, terraza, plaza y trastero; que todo coincida con la realidad.',1],
-  ['notaSimple','Nota simple y cargas','Titularidad, cargas, hipotecas, afecciones y anejos vinculados.',1],
-  ['comunidadDeuda','Deuda con comunidad','Certificado de deuda cero y últimas 2–3 actas.',1],
-  ['energetico','Certificado energético','Pide etiqueta vigente y comprueba sistema de calefacción/climatización declarado.',0],
-  ['honorarios','Honorarios de la inmobiliaria al comprador','Preguntar literalmente cuánto paga el comprador, IVA incluido, y si hay obligación de usar su financiación.',1],
-  ['financiacion','Oferta de financiación hasta 100%','Si la mencionan, confirmar que es opcional, coste total, intermediario y honorarios; no mezclarla con vuestra financiación.',0]
+ {id:'docs',title:'7 · Preguntas y documentación',sub:'No reservar hasta aclarar especialmente unidad real y costes',items:[
+  ['comunidadDoc','Comunidad: importe y certificado','Confirmar cuota exacta actual y pedir certificado de deuda cero antes de firma.',1],
+  ['actas','Últimas actas de comunidad','Revisar 2–3 últimas: piscina, ascensor, garaje, fachadas, morosidad, derramas y litigios.',1],
+  ['ibi','IBI y otros gastos','Importe anual de IBI y tasas aplicables.',0],
+  ['registro','Registro y Catastro','Que coincidan m², planta, puerta, garaje, trastero y terraza con la unidad visitada.',1],
+  ['notaSimple','Nota simple y cargas','Titularidad, cargas, anejos y cualquier afección.',1],
+  ['energetico','Certificado energético','Pide documento vigente de ESA vivienda, no de vivienda tipo. El anuncio publica 300 kWh/m²·año y 65 kg CO₂/m²·año.',1],
+  ['siniestros','Siniestros anteriores','Filtraciones de terraza/cubierta, daños por agua, incidencias en garaje y partes de seguro.',1],
+  ['motivo','Motivo de venta / titular del activo','Saber si es particular, empresa, banco/fondo y cuánto tiempo lleva comercializándose.',0],
+  ['honorarios','Honorarios al comprador','Preguntar por escrito si GH Casas cobra honorarios al comprador y cuantía total con IVA.',1],
+  ['arras','Condiciones de reserva/arras','Importe, plazo, devolución si falla financiación y documentación que se entrega antes de firmar.',1]
  ]},
- {id:'final',title:'8 · Valoración final',sub:'Hazla al salir, ya sin el vendedor delante',items:[
-  ['sensacion','Sensación general','¿Os imagináis viviendo aquí realmente?',0],
-  ['dosDorm','Solo 2 dormitorios','Valora si os sirve 5–10 años o si os obligaría a cambiar antes de tiempo.',1],
-  ['escaleraLargo','Escalera a medio/largo plazo','Niños, lesiones, visitas mayores y reventa: ¿os sigue pareciendo cómoda?',0],
-  ['reformasInmediatas','Necesidad de reforma inmediata','Coste, tiempo y molestias antes de entrar.',1],
-  ['reventa','Facilidad de reventa','Dúplex + 2 dormitorios reduce público frente a un 3 dormitorios, pero lift+garaje+trastero+terraza ayudan.',0],
-  ['decision','Relación global calidad / riesgos','Valórala después de contrastar precio, estado y defectos permanentes.',1]
+ {id:'final',title:'8 · Valoración final',sub:'Rellénalo al salir',items:[
+  ['sensacion','Sensación general','¿Os ha gustado la vivienda REAL tanto como las fotos?',0],
+  ['dosDorm','Dos dormitorios a medio plazo','¿Os sirve 5–10 años o puede obligaros a cambiar antes?',1],
+  ['dosBanos','Valor de los 2 baños','¿Compensa parte de la limitación de tener solo 2 dormitorios?',0],
+  ['piscinaUso','Valor real de piscina/urbanización','¿La usaríais lo suficiente para justificar comunidad y futuras derramas?',0],
+  ['movilidadFinal','Movilidad y dependencia del coche','¿Os resulta cómoda para trabajo, compras y vida diaria?',1],
+  ['reformasInmediatas','Reformas inmediatas','Cuantifica lo que tocaríais antes de entrar.',1],
+  ['reventa','Facilidad de reventa','Valdeluz + 2 dormitorios limita algo el público; terraza, 2 baños, piscina, garaje y trastero lo compensan.',0],
+  ['decision','Relación calidad / precio / riesgos','Valora después de conocer honorarios, cuota real y documentación.',1]
  ]}
 ];
 function makeCode(){const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='V-';for(let i=0;i<4;i++)s+=a[Math.floor(Math.random()*a.length)];s+='-26';return s}
